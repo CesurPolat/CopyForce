@@ -1,2 +1,2 @@
 # CopyForce
-It's Geforce NOW Clone
+It's Geforce NOW Clone in Python
