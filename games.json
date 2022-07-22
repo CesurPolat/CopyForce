@@ -1,2 +1,2 @@
-{"name":"Google","path":"chrome.exe"}
-{"name":"Command Prompt","path":"C:\\WINDOWS\\system32\\cmd.exe"}
+{"name":"Command Prompt","path":"C:\\WINDOWS\\system32\\cmd.exe","thumbnail":"image/chrome.jpg"}
+{"name":"Google","path":"chrome.exe","thumbnail":"image/command_prompt.jpg"}
