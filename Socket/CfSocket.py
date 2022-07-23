@@ -5,8 +5,19 @@ import os
 import pyautogui
 from io import BytesIO
 from pynput.keyboard import KeyCode,Controller
+from pynput.mouse import Button
+from pynput import mouse
 
 keyboard = Controller()
+mouse=mouse.Controller()
+
+Buttons=[
+    "",
+    Button.left,
+    Button.right,
+    "",
+    Button.middle,
+]
 
 async def getScreen(websocket):
     try:
@@ -23,14 +34,22 @@ async def getScreen(websocket):
 
 async def messageSys(websocket):
     async for message in websocket:
-        if "key" in json.loads(message):
-            keyboard.press(KeyCode(int(json.loads(message)["key"])))
-            keyboard.release(KeyCode(int(json.loads(message)["key"])))
-        if "open" in json.loads(message):
+        jsonMessage=json.loads(message)
+        if "key" in jsonMessage:
+            keyboard.press(KeyCode(int(jsonMessage["key"])))
+            keyboard.release(KeyCode(int(jsonMessage["key"])))
+        if "mouse" in jsonMessage:
+            mouse.move(jsonMessage['mouse'][0],jsonMessage['mouse'][1])
+        if "click" in jsonMessage:
+            mouse.click(Buttons[jsonMessage['click']],1)
+        if "wheel" in jsonMessage:
+            mouse.scroll(0,jsonMessage["wheel"])
+        if "open" in jsonMessage:
             f=open("games.json","r")
             for appName in f.readlines():
-                if json.loads(appName)["name"]==json.loads(message)["open"]:
+                if json.loads(appName)["name"]==jsonMessage["open"]:
                     os.system("start "+json.loads(appName)["path"])
+                    mouse.position=(0,0)
                     break
 
 async def echo(websocket):
@@ -43,4 +62,6 @@ async def main():
     async with serve(echo, "0.0.0.0", 3000):
         await asyncio.Future()  # run forever
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
+    print("Websocket Running...")
